@@ -15,7 +15,7 @@
 
   * Support rewarded video only;
   * Support Unity4.x, Unity5.x, Unity2017;
-  * Support iOS 7.0+;
+  * Support iOS 8.0+;
   * Support Android API Level 15+;
   * [Click Here to Download Latest SDK;](https://github.com/ad-thor/Unity_Plugin/blob/master/U3D-AppoSDK.unitypackage.zip)
 
