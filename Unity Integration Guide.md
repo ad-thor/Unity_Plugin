@@ -11,9 +11,6 @@
   * [Sample Code](#sample_code)
 
   ## <a name="start">Before You Start</a>
-
-
-  * Support rewarded video only;
   * Support Unity4.x, Unity5.x, Unity2017;
   * Support iOS 8.0+;
   * Support Android API Level 15+;
