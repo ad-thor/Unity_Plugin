@@ -1,5 +1,5 @@
 ```
-# Getting Started with the Appo Unity Plugin
+# Getting Started with the Cloudmobi Unity Plugin
 
 * [Before You Start](#start)
 * [SDK Set Up](#step1)
@@ -7,9 +7,9 @@
   - [Interstitial](#interstitial)
 * [Additional Settings for iOS](#step2)
 * [Additional Settings for Android](#step3)
-* [Appo SDK API Reference](#ApiReference)
+* [Cloudmobi SDK API Reference](#ApiReference)
 * [Sample Code](#sample_code)
-
+* [SDK Release Notes](https://github.com/cloudmobi/CloudmobiSSP/blob/master/Unity_Release_Notes.md)
 ## <a name="start">Before You Start</a>
 
 
@@ -17,57 +17,57 @@
 * Support Unity4.x, Unity5.x, Unity2017;
 * Support iOS 7.0+;
 * Support Android API Level 15+;
-* [Click Here to Download Latest SDK;](https://github.com/ad-thor/Unity_Plugin/blob/master/U3D-AppoSDK.unitypackage.zip)
+* [Click Here to Download Latest SDK;](https://github.com/cloudmobi/CloudmobiSSP/blob/master/U3D-CTServiceSDK.unitypackage.zip)
 
-## <a name="step1">Step 1. Appo Unity SDK Set Up</a>
+## <a name="step1">Step 1. Cloudmobi Unity SDK Set Up</a>
 
-* Import U3D-AppoSDK.unitypackage to your U3D project.
+* Import CTService.unitypackage to your U3D project.
 
 * Create a script and attach it to [Main Camera]. Then implement the Awake function as belows.
 
 ​```
-using AppoServiceSDK;
+using CTServiceSDK;
 void Awake () {
-	AppoService.initSDK (slot_id);
-	AppoService.uploadConsent ("yes", "GDPR");
+	CTService.loadRequestGetCTSDKConfigBySlot_id (slot_id);
+	CTService.uploadConsent ("yes", "GDPR");
 }
 ​```
 
 * Use this interface to upload consent from affected users.
 ​```
-	AppoService.uploadConsent (consentValue, consentType);
+	CTService.uploadConsent (consentValue, consentType);
 ​```
 
-###  <a name="rewardedvideo">Adding the Rewarded Video Ad API in iOS</a>
+###  <a name="rewardedvideo">Adding the RewardVideo Ad API in iOS</a>
 
 * [For Rewarded Video] Create a script and attach it to a Unity UIController which you'd like to show rewarded video on. Then implement the Start function as belows.
 
 ​```
 void Start () {
 	//load rewardvideo ad
-	AppoService.loadRewardedVideo (slot_id);
+	CTService.loadRewardVideoWithSlotId (slot_id);
 }
 
 void OnEnable() {
-	AppoService.rewardVideoLoadSuccess   += AppoRewardVideoLoadSuccess;
-	AppoService.rewardVideoLoadingFailed += AppoRewardVideoLoadingFailed;
+	CTService.rewardVideoLoadSuccess   += CTRewardVideoLoadSuccess;
+	CTService.rewardVideoLoadingFailed += CTRewardVideoLoadingFailed;
 }
 
 void OnDisable(){
-	AppoService.rewardVideoLoadSuccess -= AppoRewardVideoLoadSuccess;
-	AppoService.rewardVideoLoadingFailed -= AppoRewardVideoLoadingFailed;
+	CTService.rewardVideoLoadSuccess -= CTRewardVideoLoadSuccess;
+	CTService.rewardVideoLoadingFailed -= CTRewardVideoLoadingFailed;
 }
 
 void OnDestroy(){
-	AppoService.release ();
+	CTService.release ();
 }
 
-void AppoRewardVideoLoadSuccess(){
+void CTRewardVideoLoadSuccess(){
 
 }
 
-void AppoRewardVideoLoadingFailed(string error){
-	Debug.Log ("U3D delegate, AppoRewardVideoLoadingFailed. " + error);
+void CTRewardVideoLoadingFailed(string error){
+	Debug.Log ("U3D delegate, CTRewardVideoLoadingFailed. " + error);
 }
 
 ​```
@@ -76,10 +76,10 @@ void AppoRewardVideoLoadingFailed(string error){
 ​```
 void playBtnClick(){
 	//show reward video if it's avalable
-	if(AppoService.isRewardedVideoReady ())
-		AppoService.showRewardedVideo (slot_id);
+	if(CTService.checkRewardVideoIsReady ())
+		CTService.showRewardVideo (slot_id);
 	else
-		Debug.Log ("Appo Rewarded Video is not ready");
+		Debug.Log ("CT Rewarded Video is not ready");
 }
 ​```
 
@@ -90,29 +90,29 @@ void playBtnClick(){
 ​```
 void Start () {
 	//load interstitial ad
-	AppoService.preloadInterstitialAD (slot_id);
+	CTService.preloadInterstitialWithSlotId (slot_id);
 }
 
 void OnEnable() {
-	AppoService.interstitialLoadSuccess   += AppoInterstitialLoadSuccess;
-	AppoService.interstitialLoadFailed += AppoInterstitialLoadingFailed;
+	CTService.interstitialLoadSuccess   += CTInterstitialLoadSuccess;
+	CTService.interstitialLoadFailed += CTInterstitialLoadingFailed;
 }
 
 void OnDisable(){
-	AppoService.interstitialLoadSuccess -= AppoInterstitialLoadSuccess;
-	AppoService.interstitialLoadFailed -= AppoInterstitialLoadFailed;
+	CTService.interstitialLoadSuccess -= CTInterstitialLoadSuccess;
+	CTService.interstitialLoadFailed -= interstitialLoadFailed;
 }
 
 void OnDestroy(){
-	AppoService.release ();
+	CTService.release ();
 }
 
-void AppoInterstitialLoadSuccess(){
+void CTInterstitialLoadSuccess(){
 
 }
 
-void AppoInterstitialLoadingFailed(string error){
-	Debug.Log ("U3D delegate, AppoInterstitialLoadFailed. " + error);
+void CTInterstitialLoadingFailed(string error){
+	Debug.Log ("U3D delegate, CTInterstitialLoadFailed. " + error);
 }
 ​```
 
@@ -121,10 +121,10 @@ void AppoInterstitialLoadingFailed(string error){
 ​```
 void showBtnClick(){
 	//show interstitial if it's avalable
-	if(AppoService.isInterstitialAvailable ())
-		AppoService.showInterstitial ();
+	if(CTService.isInterstitialAvailable ())
+		CTService.showInterstitial ();
 	else
-		Debug.Log ("Appo Interstitial is not ready");
+		Debug.Log ("CT Interstitial is not ready");
 }
 ​```
 
@@ -135,7 +135,7 @@ void showBtnClick(){
  
 *  For Unity4.x you need to do some configuration or using other method to do that(eg: XUPorter):
 	- 1.Build Xcode project.
-	- 2.copy ApplinsSDK.Framework and AppoServiceCWrapper.mm to your Xcode project manually.
+	- 2.copy CTService.Framework and CTServiceCWrapper.mm to your Xcode project manually.
 	- 3.Add a static link to: Build Settings -> Other Linker Flags -> -ObjC
 	- 4.In Info.plist added the NSAppTransportSecurity, the type for Dictionary. In NSAppTransportSecurity added the NSAllowsArbitraryLoads the Boolean,setting YES.
 	- 5.Import libz.tbd in Project -> Target -> Build Phases -> Link Binary With Libraries.
@@ -147,16 +147,16 @@ void showBtnClick(){
 ## <a name="step3">Additional Settings for Android</a>
 
 * Open 'File' -> 'Build Settings' -> 'Player Settings', and make sure 'Minimum API Level' later than 'API Level 15'. We recommend using the latest version of Android SDK and Build Tools.
-* Select SDK folder Plugin->Android->AppoSDK in Project. Check the Android box in the inspector.
+* Select SDK folder Plugin->Android->CTServiceSDK in Project. Check the Android box in the inspector.
 
 ## <a name="ApiReference">SDK API reference</a>
 
 ​```
 /**
- Get Appo AD Config in Appdelegate(didFinishLaunchingWithOptions:)
- @param slot_id Ad
+Get CT AD Config in Appdelegate(didFinishLaunchingWithOptions:)
+@param slot_id Ad
 */
-public static void initSDK(string slot_id)
+public static void loadRequestGetCTSDKConfigBySlot_id(string slot_id)
 
 /**
 Use this interface to upload consent from affected users 
@@ -167,17 +167,17 @@ public static void uploadConsent(string consentValue, string consentType)
 
 /**
 *  Get RewardVideo Ad
-*  Call (loadRewardedVideo) method get RewardVideo Ad！
-@param slot_id         AppoService AD ID
+*  Call (loadRewardVideoWithSlotId) method get RewardVideo Ad！
+@param slot_id         Cloud Tech AD ID
 */
-public static void loadRewardedVideo(string slot_id)
+public static void loadRewardVideoWithSlotId(string slot_id)
 
 
 /**
 *  show RewardVideo
 *  you should call it after rewardVideoLoadSuccess delegate function is invoked.
 */
-public static void showRewardedVideo()		
+public static void showRewardVideo()		
 
 /**
 * Check if RewardVideo is read 
@@ -186,7 +186,7 @@ public static void showRewardedVideo()
 public static bool checkRewardVideoIsReady()
 
 /**
-Rewarded video ad delegate
+CTReward video ad delegate
 */
 
 /**
@@ -247,9 +247,9 @@ public static event Action rewardVideoClosed;
  Get Interstitial Ad
  First,you should Call (loadInterstitialWithSlotId) method get Interstitial！
  Then On his success delegate method invokes (showInterstitia） method
-@param slot_id         AppoService AD ID
+@param slot_id         Cloud Tech AD ID
  */
-public static void preloadInterstitialAD(string slot_id)
+public static void preloadInterstitialWithSlotId(string slot_id)
 		
 /**
 show showInterstitial	you should call it in the loadInterstitialWithSlotId delegate function.
@@ -294,44 +294,42 @@ public static event Action interstitialClose;
 
 ##  <a name="sample_code"> Sample Code </a>
 
- **AppoCamera.cs** attaches to [Main Camera]
+ **CTCamera.cs** attaches to [Main Camera]
 
 ​```
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using AppoServiceSDK;
+using CTServiceSDK;
 
-public class AppoCamera : MonoBehaviour {
+public class CTCamera : MonoBehaviour {
 	#if UNITY_ANDROID
-	private string slot_id = "72666429";
+	public string slot_id = "1601";
 	#elif UNITY_IOS
-	private string slot_id = "30769964";
+	public string slot_id = "260";
 	#endif
 
 	void Awake () {
-		AppoService.initSDK (slot_id);
-		AppoService.uploadConsent ("yes", "GDPR");
+		CTService.loadRequestGetCTSDKConfigBySlot_id (slot_id);
+		CTService.uploadConsent ("yes", "GDPR");
 	}
 }
-
 ​```
 
-**AppoRewardedVideo.cs** attaches to a Unity GameObject which you'd like to show rewarded video.
+**CTRewardedVideo.cs** attaches to a Unity GameObject which you'd like to show rewarded video.
 
 ​```
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using AppoServiceSDK;
+using CTServiceSDK;
 
-public class AppoRewardedVideo : MonoBehaviour {
+public class CTCanvas : MonoBehaviour {
 	#if UNITY_ANDROID
-	private string slot_id = "72666429";
+	public string slot_id = "1601";
 	#elif UNITY_IOS
-	private string slot_id = "30769964";
+	public string slot_id = "260";
 	#endif
 	//notice: attach your UI objcet here
 	public Button loadBtn;
@@ -341,64 +339,70 @@ public class AppoRewardedVideo : MonoBehaviour {
 	void Start () {
 		playBtn.onClick.AddListener (playBtnClick);
 		loadBtn.onClick.AddListener (loadBtnClick);
+		//set delegate
+		setupDelegates ();
 		//Notice: load rewardvideo ad when you init UI.
-		AppoService.loadRewardedVideo(slot_id); 
+		CTService.loadRewardVideoWithSlotId (slot_id); 
+	}
+	
+	void OnDestroy(){
+		//do not forget to call release, otherwise it will casue memory leak on android platform.
+		CTService.release ();
+	}
+	
+	void OnEnable() {
+		setupDelegates();
 	}
 
 	//set delegate
-	void OnEnable() {
-		AppoService.rewardVideoLoadSuccess += AppoRewardVideoLoadSuccess;
-		AppoService.rewardVideoLoadingFailed += AppoRewardVideoLoadingFailed;
-		AppoService.rewardVideoDidStartPlaying += AppoRewardVideoDidStartPlaying;
-		AppoService.rewardVideoDidFinishPlaying += AppoRewardVideoDidFinishPlaying;
-		AppoService.rewardVideoDidClickRewardAd += AppoRewardVideoDidClickRewardAd;
-		AppoService.rewardVideoWillLeaveApplication += AppoRewardVideoWillLeaveApplication;
-		AppoService.rewardVideoJumpfailed += AppoRewardVideoJumpfailed;
-		AppoService.rewardVideoAdRewarded += AppoRewardVideoAdRewarded;
-		AppoService.rewardVideoClosed += AppoRewardVideoClosed;
+	void setupDelegates(){
+		CTService.rewardVideoLoadSuccess += CTRewardVideoLoadSuccess;
+		CTService.rewardVideoLoadingFailed += CTRewardVideoLoadingFailed;
+		CTService.rewardVideoDidStartPlaying += CTRewardVideoDidStartPlaying;
+		CTService.rewardVideoDidFinishPlaying += CTRewardVideoDidFinishPlaying;
+		CTService.rewardVideoDidClickRewardAd += CTRewardVideoDidClickRewardAd;
+		CTService.rewardVideoWillLeaveApplication += CTRewardVideoWillLeaveApplication;
+		CTService.rewardVideoJumpfailed += CTRewardVideoJumpfailed;
+		CTService.rewardVideoAdRewarded += CTRewardVideoAdRewarded;
+		CTService.rewardVideoClosed += CTRewardVideoClosed;
 	}
-
+	
 	void OnDisable(){
-		AppoService.rewardVideoLoadSuccess -= AppoRewardVideoLoadSuccess;
-		AppoService.rewardVideoLoadingFailed -= AppoRewardVideoLoadingFailed;
-		AppoService.rewardVideoDidStartPlaying -= AppoRewardVideoDidStartPlaying;
-		AppoService.rewardVideoDidFinishPlaying -= AppoRewardVideoDidFinishPlaying;
-		AppoService.rewardVideoDidClickRewardAd -= AppoRewardVideoDidClickRewardAd;
-		AppoService.rewardVideoWillLeaveApplication -= AppoRewardVideoWillLeaveApplication;
-		AppoService.rewardVideoJumpfailed -= AppoRewardVideoJumpfailed;
-		AppoService.rewardVideoAdRewarded -= AppoRewardVideoAdRewarded;
-		AppoService.rewardVideoClosed -= AppoRewardVideoClosed;
+		CTService.rewardVideoLoadSuccess -= CTRewardVideoLoadSuccess;
+		CTService.rewardVideoLoadingFailed -= CTRewardVideoLoadingFailed;
+		CTService.rewardVideoDidStartPlaying -= CTRewardVideoDidStartPlaying;
+		CTService.rewardVideoDidFinishPlaying -= CTRewardVideoDidFinishPlaying;
+		CTService.rewardVideoDidClickRewardAd -= CTRewardVideoDidClickRewardAd;
+		CTService.rewardVideoWillLeaveApplication -= CTRewardVideoWillLeaveApplication;
+		CTService.rewardVideoJumpfailed -= CTRewardVideoJumpfailed;
+		CTService.rewardVideoAdRewarded -= CTRewardVideoAdRewarded;
+		CTService.rewardVideoClosed -= CTRewardVideoClosed;
 	}
 
-	void OnDestroy(){
-		//do not forget to call release, otherwise android platform will casue memory leak.
-		AppoService.release ();
-	}
-
-	//Notice: You should call this api as soon as you can. For example, call it in Start function.(not in awake, beacause we must call AppoService.initSDK first in camera awake function)
+	//Notice: You should call this api as soon as you can. For example, call it in Start function.(not in awake, beacause we must call CTService.loadRequestGetCTSDKConfigBySlot_id first in camera awake function)
 	//For convenience test, we add a button to click.
 	void loadBtnClick(){
 		//load rewardvideo ad
-		AppoService.loadRewardedVideo (slot_id);
+		CTService.loadRewardVideoWithSlotId (slot_id);
 	}
 
 	void playBtnClick(){
 		//you can also use this api to check if rewearded video is ready.
-		if (AppoService.isRewardedVideoReady ()) {
-			setReady (true, null);
-			AppoService.showRewardedVideo (slot_id);
+		if (CTService.checkRewardVideoIsReady ()) {
+			setReady (true);
+			CTService.showRewardVideo (slot_id);
 		}
 		else
-			Debug.Log ("Appo Rewarded Video is not ready");
+			Debug.Log ("CT Rewarded Video is not ready");
 	}
 
-	void setReady(bool isReady, string msg){
+	void setReady(bool isReady){
 		if (isReady) {
 			statusText.color = Color.green; 
 			statusText.text = "isReadyToPlay: Yes";
 		} else {
 			statusText.color = Color.red; 
-			statusText.text = msg;
+			statusText.text = "isReadyToPlay: No";
 		}
 	}
 		
@@ -406,74 +410,74 @@ public class AppoRewardedVideo : MonoBehaviour {
 	 * 
 	 * reward video delegate
 	 * 
+	 * delegate method names should be the same as follows
 	 * 
 	 * */
 
 	//video load success. 
 	//Do not show reward video in the function, for android sdk preloads ads, may call this function several times.
-	void AppoRewardVideoLoadSuccess(){
-		Debug.Log ("U3D delegate, AppoRewardVideoLoadSuccess");
-		setReady (true, null);
+	void CTRewardVideoLoadSuccess(){
+		setReady (true);
+		Debug.Log ("U3D delegate, CTRewardVideoLoadSuccess");
 	}
 
 	//video load failure
-	void AppoRewardVideoLoadingFailed(string error){
-		setReady (false, error);
-		Debug.Log ("U3D delegate, AppoRewardVideoLoadingFailed. " + error);
+	void CTRewardVideoLoadingFailed(string error){
+		setReady (false);
+		Debug.Log ("U3D delegate, CTRewardVideoLoadingFailed. " + error);
 	}
 		
 	//start playing video
-	void AppoRewardVideoDidStartPlaying(){
-		Debug.Log ("U3D delegate, AppoRewardVideoDidStartPlaying");
+	void CTRewardVideoDidStartPlaying(){
+		Debug.Log ("U3D delegate, CTRewardVideoDidStartPlaying");
 	}
 
 	//finish playing video
-	void AppoRewardVideoDidFinishPlaying(){
-		Debug.Log ("U3D delegate, AppoRewardVideoDidFinishPlaying");
+	void CTRewardVideoDidFinishPlaying(){
+		Debug.Log ("U3D delegate, CTRewardVideoDidFinishPlaying");
 	}
 
-	//click ad
-	void AppoRewardVideoDidClickRewardAd(){
-		Debug.Log ("U3D delegate, AppoRewardVideoDidClickRewardAd");
+	//click ad, only for iOS
+	void CTRewardVideoDidClickRewardAd(){
+		Debug.Log ("U3D delegate, CTRewardVideoDidClickRewardAd");
 	}
 		
 	//will leave Application, only for iOS
-	void AppoRewardVideoWillLeaveApplication(){
-		Debug.Log ("U3D delegate, AppoRewardVideoWillLeaveApplication");
+	void CTRewardVideoWillLeaveApplication(){
+		Debug.Log ("U3D delegate, CTRewardVideoWillLeaveApplication");
 	}
 		
 	//jump to AppStroe failed, only for iOS
-	void AppoRewardVideoJumpfailed(){
-		Debug.Log ("U3D delegate, AppoRewardVideoWillLeaveApplication");
+	void CTRewardVideoJumpfailed(){
+		Debug.Log ("U3D delegate, CTRewardVideoWillLeaveApplication");
 	}
 
 	//players get rewarded here
-	void AppoRewardVideoAdRewarded(string rewardVideoNameAndAmount){
-		Debug.Log ("U3D delegate, AppoRewardVideoAdRewarded, " + rewardVideoNameAndAmount);
+	void CTRewardVideoAdRewarded(string rewardVideoNameAndAmount){
+		Debug.Log ("U3D delegate, CTRewardVideoAdRewarded, " + rewardVideoNameAndAmount);
 	}
 
 	//close video ad
-	void AppoRewardVideoClosed(){
-		Debug.Log ("U3D delegate, AppoRewardVideoClosed");
-		setReady (false, "video play end");
+	void CTRewardVideoClosed(){
+		Debug.Log ("U3D delegate, CTRewardVideoClosed");
+		setReady (false);
 	}
 }
-
 ​```
-**AppoInterstitial.cs** attaches to a Unity GameObject which you'd like to show interstitail.
+**CTInterstitial.cs** attaches to a Unity GameObject which you'd like to show interstitail.
 
 ​```
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using AppoServiceSDK;
+using CTServiceSDK;
 
-public class AppoInterstitial : MonoBehaviour {
+public class CTInterstitial : MonoBehaviour {
 	#if UNITY_ANDROID
-	private string slot_id = "11546588";
+	public string slot_id = "248";
 	#elif UNITY_IOS
-	private string slot_id = "53479848";
+	public string slot_id = "82095565";
 	#endif
 	//notice: attach your UI objcet here
 	public Button loadBtn;
@@ -485,32 +489,31 @@ public class AppoInterstitial : MonoBehaviour {
 		showBtn.onClick.AddListener (showBtnClick);
 		loadBtn.onClick.AddListener (loadBtnClick);
 		//Notice: load Interstitial ad when you init UI.
-		AppoService.preloadInterstitialAD (slot_id); 
+		CTService.preloadInterstitialWithSlotId (slot_id); 
 	}
 	
-	//set delegate
 	void OnEnable() {
 		setupDelegates();
 	}
 
 	//set delegate
 	void setupDelegates(){
-		AppoService.interstitialLoadSuccess += AppoInterstitialLoadSuccess;
-		AppoService.interstitialLoadFailed += AppoInterstitialLoadingFailed;
-		AppoService.interstitialDidClickRewardAd += AppoInterstitialDidClickRewardAd;
-		AppoService.interstitialClose += AppoInterstitialClose;
+		CTService.interstitialLoadSuccess += CTInterstitialLoadSuccess;
+		CTService.interstitialLoadFailed += CTInterstitialLoadingFailed;
+		CTService.interstitialDidClickRewardAd += CTInterstitialDidClickAd;
+		CTService.interstitialClose += CTInterstitialClose;
 	}
 
 	void OnDisable(){
-		AppoService.interstitialLoadSuccess -= AppoInterstitialLoadSuccess;
-		AppoService.interstitialLoadFailed -= AppoInterstitialLoadingFailed;
-		AppoService.interstitialDidClickRewardAd -= AppoInterstitialDidClickRewardAd;
-		AppoService.interstitialClose -= AppoInterstitialClose;
+		CTService.interstitialLoadSuccess -= CTInterstitialLoadSuccess;
+		CTService.interstitialLoadFailed -= CTInterstitialLoadingFailed;
+		CTService.interstitialDidClickRewardAd -= CTInterstitialDidClickAd;
+		CTService.interstitialClose -= CTInterstitialClose;
 	}
 
 	void OnDestroy(){
 		//do not forget to call release, otherwise android platform will casue memory leak.
-		AppoService.release ();
+		CTService.release ();
 	}
 
 	void setReady(bool isReady, string msg){
@@ -523,20 +526,22 @@ public class AppoInterstitial : MonoBehaviour {
 		}
 	}
 
+	//Notice: You should call this api as soon as you can. For example, call it in Start function.(not in awake, beacause we must call CTService.loadRequestGetCTSDKConfigBySlot_id first in camera awake function)
+	//For convenience test, we add a button to click.
 	void loadBtnClick(){
 		//load Interstitial ad
-		AppoService.preloadInterstitialAD (slot_id);
-		Debug.Log ("Appo Interstitial loadBtnClick");
+		CTService.preloadInterstitialWithSlotId (slot_id);
+		Debug.Log ("CT Interstitial loadBtnClick");
 	}
 
 	void showBtnClick(){
 		//you can also use this api to check if Interstitial is ready.
-		if (AppoService.isInterstitialAvailable ()) {
+		if (CTService.isInterstitialAvailable ()) {
 			setReady (true, null);
-			AppoService.showInterstitial ();
+			CTService.showInterstitial ();
 		}
 		else
-			Debug.Log ("Appo Interstitial is not ready");
+			Debug.Log ("CT Interstitial is not ready");
 	}
 
 
@@ -544,34 +549,29 @@ public class AppoInterstitial : MonoBehaviour {
 	 * 
 	 * Interstitial delegate
 	 * 
-	 * 
 	 * */
-	void AppoInterstitialLoadSuccess(){
-		Debug.Log ("U3D delegate, AppoInterstitialLoadSuccess");
+	void CTInterstitialLoadSuccess(){
+		Debug.Log ("U3D delegate, CTInterstitialLoadSuccess");
 		setReady (true, null);
 	}
 
-	void AppoInterstitialLoadingFailed(string error){
+	void CTInterstitialLoadingFailed(string error){
 		setReady (false, error);
-		Debug.Log ("U3D delegate, AppoInterstitialLoadingFailed. " + error);
+		Debug.Log ("U3D delegate, CTInterstitialLoadingFailed. " + error);
 	}
 
-	//click ad, only for iOS
-	void AppoInterstitialDidClickRewardAd(){
-		Debug.Log ("U3D delegate, AppoInterstitialDidClickAd");
+	void CTInterstitialDidClickAd(){
+		Debug.Log ("U3D delegate, CTInterstitialDidClickAd");
 	}
 
-	void AppoInterstitialClose(){
-		Debug.Log ("U3D delegate, AppoInterstitialClose");
+	void CTInterstitialClose(){
+		Debug.Log ("U3D delegate, CTInterstitialClose");
 		setReady (false, @"isReadyToShow: NO");
 	}
 }
-
 ​```
-**AppoOnPostProcessBuild.cs** added to assets/editor directory.
+**CTOnPostProcessBuild.cs** added to assets/editor directory.
 ​```
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
@@ -582,7 +582,7 @@ using UnityEditor.iOS.Xcode;
 using System.Xml;
 #endif
 
-public class AppoOnPostProcessBuild : Editor {
+public class CTOnPostProcessBuild : Editor {
 	#if UNITY_IOS || UNITY_EDITOR  
 
 	[PostProcessBuild (100)]
@@ -607,7 +607,7 @@ public class AppoOnPostProcessBuild : Editor {
 			proj.AddFrameworkToProject (target, "JavaScriptCore.framework", false);  
 			proj.AddFrameworkToProject (target, "ImageIO.framework", false);  
 			proj.AddFrameworkToProject (target, "UIKit.framework", false);  
-            proj.AddFrameworkToProject (target, "libz.1.tbd", false); 
+            		proj.AddFrameworkToProject (target, "libz.1.tbd", false); 
 			File.WriteAllText(projPath, proj.WriteToString()); 
 
 			//add ATS in plist
@@ -622,7 +622,6 @@ public class AppoOnPostProcessBuild : Editor {
 
 	#endif
 }
-
 ​```
 
 ```
