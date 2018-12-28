@@ -35,7 +35,7 @@
     AppoService.uploadConsent (consentValue, consentType);
     ```
 
-  ###  <a name="rewardedvideo">Adding the Rewarded Video Ad API in iOS</a>
+  ###  <a name="rewardedvideo">Adding the Rewarded Video Ad API</a>
 
   * [For Rewarded Video] Create a script and attach it to a Unity UIController which you'd like to show rewarded video on. Then implement the Start function as belows.
 
@@ -79,7 +79,7 @@
   }
   ```
 
-  ### <a name="interstitial">Adding the Interstitial Ad API in iOS</a>
+  ### <a name="interstitial">Adding the Interstitial Ad API</a>
 
   * [For Interstitial] Create a script and attach it to a Unity UIController which you'd like to show intersitial ad on. Then implement the Start function as belows.
 
